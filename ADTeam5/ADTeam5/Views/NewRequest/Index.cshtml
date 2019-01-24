@@ -1,0 +1,83 @@
+﻿@model ADTeam5.Controllers.Department.TemporaryRecordDetails
+<h1>New Request</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        @{
+            <form asp-controller="NewRequest" asp-action="AddItem" method="post" class="form-horizontal" role="form">
+
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <select asp-for="ItemNumber" class="form-control" asp-items="@(new SelectList(ViewBag.ListofCatalogueName, "ItemNumber", "ItemName"))"></select>
+                </div>
+
+                <div class="form-group">
+                    <label> Quantity</label>
+                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @min = 1, @max = 999, @class = "form-control left-border-none", @id = "Quantity" } })
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Add Item" class="btn btn-primary" />
+                </div>
+
+            </form>
+
+        }
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.itemName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.tList)
+            {
+                using (Html.BeginForm("Delete", "NewRequest", FormMethod.Post, new { id = item.itemName }))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.itemName)
+                        </td>
+                        <td>
+                            @Html.EditorFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            @*<a asp-controller="NewRequest" asp-action="Delete" asp-route-id="@item.itemName"> Remove</a>*@
+                            @*@Html.ActionLink("Remove", "Delete", new { id = Model.itemName })*@
+                            <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to remove record @item.itemName');" />
+                        </td>
+                        @*<td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+
+                            </td>*@
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@if (ViewData["SubmitButton"] != null)
+{
+    <form asp-action="Submit" method="post">
+        <div class="form-group">
+            <input type="submit" value="Submit Request" class="btn btn-info" />
+        </div>
+    </form>
+
+}
